@@ -1,0 +1,11 @@
+server.port: 8090
+
+spring:
+  datasource:
+    url: jdbc:postgresql://localhost:5432/pizza-online
+    username: postgres
+    password: 123
+  jpa:
+    hibernate.ddl-auto: update
+    properties.hibernate.jdbc.lob.non_contextual_creation: true
+    database-platform: org.hibernate.dialect.PostgreSQLDialect

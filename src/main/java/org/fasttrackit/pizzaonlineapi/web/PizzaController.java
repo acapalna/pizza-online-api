@@ -16,7 +16,8 @@ import org.springframework.web.bind.annotation.*;
 import javax.validation.Valid;
 
 @RestController
-@RequestMapping("/pizzas")
+@RequestMapping("/menu")
+@CrossOrigin
 public class PizzaController {
 
     private final PizzaService pizzaService;

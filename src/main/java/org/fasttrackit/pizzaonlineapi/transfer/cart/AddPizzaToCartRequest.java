@@ -1,6 +1,6 @@
 package org.fasttrackit.pizzaonlineapi.transfer.cart;
 
-public class AddPizzaToCart {
+public class AddPizzaToCartRequest {
 
     private Long clientId;
     private Long pizzaId;
@@ -23,7 +23,7 @@ public class AddPizzaToCart {
 
     @Override
     public String toString() {
-        return "AddPizzaToCart{" +
+        return "AddPizzaToCartRequest{" +
                 "clientId=" + clientId +
                 ", pizzaId=" + pizzaId +
                 '}';

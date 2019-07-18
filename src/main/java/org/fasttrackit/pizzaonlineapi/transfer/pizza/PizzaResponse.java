@@ -1,36 +1,15 @@
-package org.fasttrackit.pizzaonlineapi.domain;
+package org.fasttrackit.pizzaonlineapi.transfer.pizza;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import javax.persistence.ManyToMany;
-import javax.validation.constraints.Min;
-import javax.validation.constraints.NotNull;
-import java.util.HashSet;
-import java.util.Set;
+public class PizzaResponse {
 
-@Entity
-public class Pizza {
-
-    @Id
-    @GeneratedValue
     private long id;
-    @NotNull
     private String name;
-    @NotNull
-    @Min(0)
     private Double price;
-    @Min(0)
     private Double salePrice;
-    @NotNull
-    @Min(0)
     private Double weight;
     private String ingredients;
     private String description;
     private String imagePath;
-
-    @ManyToMany(mappedBy = "pizzas")
-    private Set<Cart> carts = new HashSet<>();
 
     public long getId() {
         return id;
@@ -96,11 +75,17 @@ public class Pizza {
         this.imagePath = imagePath;
     }
 
-    public Set<Cart> getCarts() {
-        return carts;
-    }
-
-    public void setCarts(Set<Cart> carts) {
-        this.carts = carts;
+    @Override
+    public String toString() {
+        return "PizzaResponse{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", price=" + price +
+                ", salePrice=" + salePrice +
+                ", weight=" + weight +
+                ", ingredients='" + ingredients + '\'' +
+                ", description='" + description + '\'' +
+                ", imagePath='" + imagePath + '\'' +
+                '}';
     }
 }

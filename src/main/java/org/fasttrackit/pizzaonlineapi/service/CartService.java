@@ -46,8 +46,8 @@ public class CartService {
     }
 
     @Transactional
-    public void removeProductFromCart(RemovePizzaFromCartRequest request) throws ResourceNotFoundException {
-        LOGGER.info("Removing product from cart {}", request);
+    public void removePizzaFromCart(RemovePizzaFromCartRequest request) throws ResourceNotFoundException {
+        LOGGER.info("Removing pizza from cart {}", request);
 
         Client client = clientService.getClient(request.getClientId());
         Cart cart = cartRepository.findById(request.getClientId())

@@ -88,4 +88,35 @@ public class PizzaResponse {
                 ", imagePath='" + imagePath + '\'' +
                 '}';
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof PizzaResponse)) return false;
+
+        PizzaResponse that = (PizzaResponse) o;
+
+        if (id != that.id) return false;
+        if (!name.equals(that.name)) return false;
+        if (!price.equals(that.price)) return false;
+        if (salePrice != null ? !salePrice.equals(that.salePrice) : that.salePrice != null) return false;
+        if (weight != null ? !weight.equals(that.weight) : that.weight != null) return false;
+        if (ingredients != null ? !ingredients.equals(that.ingredients) : that.ingredients != null) return false;
+        if (description != null ? !description.equals(that.description) : that.description != null) return false;
+        return imagePath != null ? imagePath.equals(that.imagePath) : that.imagePath == null;
+
+    }
+
+    @Override
+    public int hashCode() {
+        int result = (int) (id ^ (id >>> 32));
+        result = 31 * result + name.hashCode();
+        result = 31 * result + price.hashCode();
+        result = 31 * result + (salePrice != null ? salePrice.hashCode() : 0);
+        result = 31 * result + (weight != null ? weight.hashCode() : 0);
+        result = 31 * result + (ingredients != null ? ingredients.hashCode() : 0);
+        result = 31 * result + (description != null ? description.hashCode() : 0);
+        result = 31 * result + (imagePath != null ? imagePath.hashCode() : 0);
+        return result;
+    }
 }

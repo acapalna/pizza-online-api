@@ -6,14 +6,19 @@ import org.fasttrackit.pizzaonlineapi.exception.ResourceNotFoundException;
 import org.fasttrackit.pizzaonlineapi.repository.PizzaRepository;
 import org.fasttrackit.pizzaonlineapi.transfer.pizza.CreatePizzaRequest;
 import org.fasttrackit.pizzaonlineapi.transfer.pizza.GetPizzaRequest;
+import org.fasttrackit.pizzaonlineapi.transfer.pizza.PizzaResponse;
 import org.fasttrackit.pizzaonlineapi.transfer.pizza.UpdatePizzaRequest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+
+import java.util.ArrayList;
+import java.util.List;
 
 
 @Service
@@ -63,28 +68,49 @@ public class PizzaService {
         LOGGER.info("Deleted pizza {}", id);
     }
 
-    public Page<Pizza> getPizza(GetPizzaRequest request, Pageable pageable) {
+    public Page<PizzaResponse> getPizza(GetPizzaRequest request, Pageable pageable) {
         LOGGER.info("Retrieving pizza {}", request);
 
+        Page<Pizza> pizzas;
+
         if (request.getPartialName() != null && request.getMinWeight() != null) {
-            return pizzaRepository.findByNameContainingAndWeightGreaterThanEqual(request.getPartialName(), request.getMinWeight(), pageable);
+            pizzas = pizzaRepository.findByNameContainingAndWeightGreaterThanEqual(request.getPartialName(), request.getMinWeight(), pageable);
         }
         else if (request.getPartialName() != null) {
-            return pizzaRepository.findByNameContaining(request.getPartialName(), pageable);
+            pizzas = pizzaRepository.findByNameContaining(request.getPartialName(), pageable);
         }
         else if (request.getPartialName() != null && request.getMinPrice() != null && request.getMaxPrice() != null) {
-            return pizzaRepository.findByNameContainingAndPriceBetween(request.getPartialName(), request.getMinPrice(), request.getMaxPrice(), pageable);
+            pizzas = pizzaRepository.findByNameContainingAndPriceBetween(request.getPartialName(), request.getMinPrice(), request.getMaxPrice(), pageable);
         }
         else if (request.getMinPrice() != null && request.getMaxPrice() != null) {
-            return pizzaRepository.findAllByPriceBetween(request.getMinPrice(), request.getMaxPrice(), pageable);
+            pizzas = pizzaRepository.findAllByPriceBetween(request.getMinPrice(), request.getMaxPrice(), pageable);
         }
         else if (request.getMinPrice() != null && request.getMaxPrice() == null) {
-            return pizzaRepository.findAllByPriceGreaterThan(request.getMinPrice(), pageable);
+            pizzas = pizzaRepository.findAllByPriceGreaterThan(request.getMinPrice(), pageable);
         }
         else if (request.getMaxPrice() != null && request.getMinPrice() == null) {
-            return pizzaRepository.findAllByPriceLessThan(request.getMaxPrice(), pageable);
+            pizzas = pizzaRepository.findAllByPriceLessThan(request.getMaxPrice(), pageable);
+        }else {
+            pizzas = pizzaRepository.findAll(pageable);
         }
-        return pizzaRepository.findAll(pageable);
+
+        List<PizzaResponse> pizzaResponses = new ArrayList<>();
+
+        pizzas.getContent().forEach(pizza -> {
+            PizzaResponse productResponse = new PizzaResponse();
+            productResponse.setId(pizza.getId());
+            productResponse.setName(pizza.getName());
+            productResponse.setPrice(pizza.getPrice());
+            productResponse.setSalePrice(pizza.getSalePrice());
+            productResponse.setWeight(pizza.getWeight());
+            productResponse.setIngredients(pizza.getIngredients());
+            productResponse.setDescription(pizza.getDescription());
+            productResponse.setImagePath(pizza.getImagePath());
+
+            pizzaResponses.add(productResponse);
+        });
+
+        return new PageImpl<>(pizzaResponses, pageable, pizzas.getTotalElements());
     }
 
 }

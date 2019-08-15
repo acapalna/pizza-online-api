@@ -5,6 +5,7 @@ import org.fasttrackit.pizzaonlineapi.exception.ResourceNotFoundException;
 import org.fasttrackit.pizzaonlineapi.service.PizzaService;
 import org.fasttrackit.pizzaonlineapi.transfer.pizza.CreatePizzaRequest;
 import org.fasttrackit.pizzaonlineapi.transfer.pizza.GetPizzaRequest;
+import org.fasttrackit.pizzaonlineapi.transfer.pizza.PizzaResponse;
 import org.fasttrackit.pizzaonlineapi.transfer.pizza.UpdatePizzaRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -29,8 +30,8 @@ public class PizzaController {
 
     //endpoint
     @GetMapping
-    public ResponseEntity<Page<Pizza>> getPizzas(GetPizzaRequest request, Pageable pageable){
-        Page<Pizza> response = pizzaService.getPizza(request, pageable);
+    public ResponseEntity<Page<PizzaResponse>> getPizzas(GetPizzaRequest request, Pageable pageable){
+        Page<PizzaResponse> response = pizzaService.getPizza(request, pageable);
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 

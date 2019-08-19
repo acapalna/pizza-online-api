@@ -47,10 +47,16 @@ public class PizzaController {
         return new ResponseEntity(HttpStatus.NO_CONTENT);
     }
 
+//    @GetMapping("/{id}")
+//    public ResponseEntity<Pizza> getPizza(@PathVariable("id") Long id) throws ResourceNotFoundException {
+//        Pizza pizza = pizzaService.getPizza(id);
+//        return new ResponseEntity<>(pizza, HttpStatus.OK);
+//    }
+
     @GetMapping("/{id}")
-    public ResponseEntity getPizza(@PathVariable Long id) throws ResourceNotFoundException {
-        Pizza pizza = pizzaService.getPizza(id);
-        return new ResponseEntity<>(pizza, HttpStatus.OK);
+    public ResponseEntity<PizzaResponse> getPizza(@PathVariable("id") Long id) throws ResourceNotFoundException {
+        PizzaResponse response = pizzaService.getPizzaById(id);
+        return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
     @PutMapping("/{id}")

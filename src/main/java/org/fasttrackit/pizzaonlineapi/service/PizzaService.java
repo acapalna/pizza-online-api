@@ -19,6 +19,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 
 @Service
@@ -45,14 +46,6 @@ public class PizzaService {
         return pizzaRepository.save(pizza);
     }
 
-    public Pizza getPizza(long id) throws ResourceNotFoundException {
-        LOGGER.info("Retrieving pizza {}", id);
-        //using optional orElseTrow
-        return pizzaRepository.findById(id)
-                //using Lambda expressions
-                .orElseThrow(() -> new ResourceNotFoundException("Pizza " + id + " does not exist"));
-    }
-
     public Pizza updatePizza(long id, UpdatePizzaRequest request) throws ResourceNotFoundException {
         LOGGER.info("Updating pizza {} with {}", id, request);
 
@@ -66,6 +59,25 @@ public class PizzaService {
         LOGGER.info("Deleting pizza {}", id);
         pizzaRepository.deleteById(id);
         LOGGER.info("Deleted pizza {}", id);
+    }
+
+
+    public Pizza getPizza(Long id) throws ResourceNotFoundException {
+        LOGGER.info("Retrieving pizza {}", id);
+        //using optional orElseTrow
+
+        return pizzaRepository.findById(id)
+                //using Lambda expressions
+                .orElseThrow(() -> new ResourceNotFoundException("Pizza " + id + " does not exist"));
+    }
+
+    public PizzaResponse getPizzaById(Long id) throws ResourceNotFoundException {
+        LOGGER.info("Retrieving pizza {}", id);
+
+        Pizza pizza = pizzaRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Pizza " + id + " does not exist"));
+
+        return pizzaToPizzaResponseConverter(pizza);
     }
 
     public Page<PizzaResponse> getPizza(GetPizzaRequest request, Pageable pageable) {
@@ -97,20 +109,25 @@ public class PizzaService {
         List<PizzaResponse> pizzaResponses = new ArrayList<>();
 
         pizzas.getContent().forEach(pizza -> {
-            PizzaResponse productResponse = new PizzaResponse();
-            productResponse.setId(pizza.getId());
-            productResponse.setName(pizza.getName());
-            productResponse.setPrice(pizza.getPrice());
-            productResponse.setSalePrice(pizza.getSalePrice());
-            productResponse.setWeight(pizza.getWeight());
-            productResponse.setIngredients(pizza.getIngredients());
-            productResponse.setDescription(pizza.getDescription());
-            productResponse.setImagePath(pizza.getImagePath());
-
-            pizzaResponses.add(productResponse);
+            PizzaResponse pizzaResponse = pizzaToPizzaResponseConverter(pizza);
+            pizzaResponses.add(pizzaResponse);
         });
 
         return new PageImpl<>(pizzaResponses, pageable, pizzas.getTotalElements());
+    }
+
+    public PizzaResponse pizzaToPizzaResponseConverter(Pizza pizza){
+        PizzaResponse pizzaResponse = new PizzaResponse();
+        pizzaResponse.setId(pizza.getId());
+        pizzaResponse.setName(pizza.getName());
+        pizzaResponse.setPrice(pizza.getPrice());
+        pizzaResponse.setSalePrice(pizza.getSalePrice());
+        pizzaResponse.setWeight(pizza.getWeight());
+        pizzaResponse.setIngredients(pizza.getIngredients());
+        pizzaResponse.setDescription(pizza.getDescription());
+        pizzaResponse.setImagePath(pizza.getImagePath());
+
+        return pizzaResponse;
     }
 
 }

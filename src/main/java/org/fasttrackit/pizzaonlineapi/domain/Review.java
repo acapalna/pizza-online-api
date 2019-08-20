@@ -13,7 +13,7 @@ public class Review {
     @NotNull
     private String content;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "pizza_id")
     private Pizza pizza;
 

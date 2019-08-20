@@ -10,7 +10,7 @@ public class Cart {
     @Id
     private long id;
 
-    @OneToOne(fetch = FetchType.LAZY)
+    @OneToOne(fetch = FetchType.EAGER)
     @MapsId
     private Client client;
 
